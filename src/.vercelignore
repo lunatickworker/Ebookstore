@@ -1,0 +1,33 @@
+# Vercel 배포에서 제외할 파일들
+node_modules
+.git
+.env.local
+.env.development
+*.log
+coverage
+.nyc_output
+dist
+build
+
+# 개발 관련 파일들
+*.md
+.eslintrc.*
+.prettierrc
+.editorconfig
+jest.config.*
+
+# IDE 설정 파일들
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS 관련 파일들
+.DS_Store
+Thumbs.db
+
+# 임시 파일들
+*.tmp
+*.temp
+.cache

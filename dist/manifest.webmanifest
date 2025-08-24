@@ -1,0 +1,1 @@
+{"name":"Ebookstore - 디지털 독서실","short_name":"Ebookstore","description":"밤늦은 독서를 위한 편안한 디지털 서점","start_url":"/","display":"standalone","background_color":"#1a1713","theme_color":"#d4a574","lang":"en","scope":"/","orientation":"portrait","icons":[{"src":"pwa-192x192.png","sizes":"192x192","type":"image/png"},{"src":"pwa-512x512.png","sizes":"512x512","type":"image/png"}]}

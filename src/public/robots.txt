@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://your-domain.vercel.app/sitemap.xml
+
+# 보안 관련 파일은 크롤링 방지
+Disallow: /.env
+Disallow: /.env.local
+Disallow: /.env.production
+Disallow: /admin/
