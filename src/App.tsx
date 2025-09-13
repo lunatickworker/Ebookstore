@@ -1,192 +1,70 @@
-import { useState, useEffect } from 'react';
-import { Home } from './components/Home';
-import { Login } from './components/Login';
-import { BookDetail } from './components/BookDetail';
-import { Reader } from './components/Reader';
-import { MyLibrary } from './components/MyLibrary';
-import Admin from './components/Admin';
-import { Register } from './components/Register';
-
-// Export interfaces for use by components
-export interface Book {
-  id: string | number;
-  title: string;
-  author: string;
-  price: number;
-  image?: string;
-  cover?: string;
-  description?: string;
-  category?: string;
-  rating?: number;
-  originalPrice?: number;
-  purchaseDate?: string;
-  isNew?: boolean;
-  isPopular?: boolean;
-  isBestseller?: boolean;
-  reviews?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'user' | 'admin';
-  isAdmin: boolean;
-  preferences?: {
-    marketing?: boolean;
-  };
-}
-
-export interface Bookmark {
-  page: number;
-  note: string;
-  date: string;
-}
-
-export type PageType = 'home' | 'login' | 'register' | 'book-detail' | 'reader' | 'my-library' | 'admin' | 'add-new-book';
+import { useState } from 'react';
+import Home from '@/components/Home';
+import Login from '@/components/Login';
+import Register from '@/components/Register';
+import MyLibrary from '@/components/MyLibrary';
+import Admin from '@/components/Admin';
+import BookDetail from '@/components/BookDetail';
+import Reader from '@/components/Reader';
+import { useAuth } from './contexts/AuthContext';
+import { Book } from './types';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const [currentPage, setCurrentPage] = useState('home');
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [myBooks, setMyBooks] = useState<Book[]>([]);
-  const [bookmarks, setBookmarks] = useState<Record<string, Bookmark[]>>({});
+  const { user, logout } = useAuth();
 
-  useEffect(() => {
-    // 다크 독서실 테마를 기본으로 적용
-    document.documentElement.classList.add('dark');
-    document.body.classList.add('reading-room');
-
-    // 로컬 스토리지에서 사용자 정보 복원
-    const savedUser = localStorage.getItem('user');
-    const savedBooks = localStorage.getItem('myBooks');
-    const savedBookmarks = localStorage.getItem('bookmarks');
-
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('user');
-      }
-    }
-    if (savedBooks) {
-      try {
-        setMyBooks(JSON.parse(savedBooks));
-      } catch (error) {
-        console.error('Error parsing books data:', error);
-        localStorage.removeItem('myBooks');
-      }
-    }
-    if (savedBookmarks) {
-      try {
-        setBookmarks(JSON.parse(savedBookmarks));
-      } catch (error) {
-        console.error('Error parsing bookmarks data:', error);
-        localStorage.removeItem('bookmarks');
-      }
-    }
-  }, []);
-
-  const navigateTo = (page: PageType, data: Book | null = null) => {
+  const navigate = (page: string) => {
     setCurrentPage(page);
-    if (data) setSelectedBook(data);
   };
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    navigateTo('home');
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    navigateTo('home');
-  };
-
-  const purchaseBook = (book: Book) => {
-    const newBooks = [...myBooks, {
-      ...book,
-      purchaseDate: new Date().toISOString(),
-      createdAt: new Date().toISOString()
-    }];
-    setMyBooks(newBooks);
-    localStorage.setItem('myBooks', JSON.stringify(newBooks));
-  };
-
-  const addBookmark = (bookId: string, page: number, note = '') => {
-    const newBookmarks = {
-      ...bookmarks,
-      [bookId]: [...(bookmarks[bookId] || []), { page, note, date: new Date().toISOString() }]
-    };
-    setBookmarks(newBookmarks);
-    localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
+  const handleSelectBook = (book: Book) => {
+    setSelectedBook(book);
+    navigate('detail');
   };
 
   const renderPage = () => {
+    if (currentPage === 'reader' && selectedBook) {
+      return <Reader book={selectedBook} onBack={() => navigate('detail')} />;
+    }
+    if (currentPage === 'detail' && selectedBook) {
+      return <BookDetail book={selectedBook} onBack={() => navigate('home')} onRead={() => navigate('reader')} />;
+    }
+
     switch (currentPage) {
       case 'home':
-        return <Home navigateTo={navigateTo} user={user} logout={logout} />;
+        return <Home onSelectBook={handleSelectBook} navigate={navigate} />;
       case 'login':
-        return <Login navigateTo={navigateTo} onLogin={login} />;
+        return <Login onLoginSuccess={() => navigate('home')} navigate={navigate} />;
       case 'register':
-        return <Register navigateTo={navigateTo} onLogin={login} />;
-      case 'book-detail':
-        return (
-          <BookDetail
-            book={selectedBook}
-            navigateTo={navigateTo}
-            user={user}
-            onPurchase={purchaseBook}
-            myBooks={myBooks}
-          />
-        );
-      case 'reader':
-        return (
-          <Reader
-            book={selectedBook}
-            navigateTo={navigateTo}
-            bookmarks={bookmarks[selectedBook?.id?.toString() || ''] || []}
-            onAddBookmark={addBookmark}
-          />
-        );
-      case 'my-library':
-        return (
-          <MyLibrary
-            navigateTo={navigateTo}
-            user={user}
-            myBooks={myBooks}
-            bookmarks={bookmarks}
-          />
-        );
+        return <Register onRegisterSuccess={() => navigate('login')} />;
+      case 'library':
+        return user ? <MyLibrary onSelectBook={handleSelectBook} /> : <Login onLoginSuccess={() => navigate('library')} navigate={navigate} />;
       case 'admin':
-        return (
-          <Admin
-            navigateTo={navigateTo}
-            books={[]} // 실제 books 데이터
-            stats={{
-              totalBooks: 0,
-              totalUsers: 0,
-              totalSales: 0,
-              newBooks: 0,
-              popularBooks: 0,
-              bestsellers: 0,
-            }}
-            onAddBook={() => { }} // 실제 함수 구현
-            preloadedImages={[]} // 실제 이미지 배열
-          />
-        );
+        return user?.isAdmin ? <Admin /> : <h2>접근 권한이 없습니다.</h2>;
       default:
-        return <Home navigateTo={navigateTo} user={user} logout={logout} />;
+        return <Home onSelectBook={handleSelectBook} navigate={navigate} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background reading-room">
-      {renderPage()}
+    <div className="min-h-screen bg-background reading-room text-foreground">
+      <header className="p-4 flex justify-between items-center bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+        <h1 className="text-2xl font-bold cursor-pointer" onClick={() => navigate('home')}>Ebookstore PWA</h1>
+        <nav className="space-x-4">
+          <button onClick={() => navigate('home')}>홈</button>
+          <button onClick={() => navigate('library')}>내 서재</button>
+          {user?.isAdmin && <button onClick={() => navigate('admin')}>관리자</button>}
+          {user ? (
+            <button onClick={logout}>로그아웃</button>
+          ) : (
+            <button onClick={() => navigate('login')}>로그인</button>
+          )}
+        </nav>
+      </header>
+      <main className="p-4">
+        {renderPage()}
+      </main>
     </div>
   );
 }
