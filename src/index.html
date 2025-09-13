@@ -1,15 +1,68 @@
-
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Ebookstore</title>
-    </head>
-
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="mask-icon" href="/masked-icon.svg" color="#d4a574" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ebookstore - 디지털 독서실</title>
+  <meta name="description" content="밤늦은 독서를 위한 편안한 디지털 서점. 24시간 언제든지 편안하게 독서할 수 있는 PWA 서비스입니다." />
+  <meta name="keywords" content="전자책, 디지털독서실, PWA, 온라인서점, 독서, 책, ebook, 독서실" />
+  <meta name="author" content="Ebookstore Team" />
   
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#d4a574" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Ebookstore" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Ebookstore" />
+  
+  <!-- Microsoft Tiles -->
+  <meta name="msapplication-TileColor" content="#d4a574" />
+  <meta name="msapplication-TileImage" content="/pwa-192x192.png" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ebookstore" />
+  <meta property="og:title" content="Ebookstore - 디지털 독서실" />
+  <meta property="og:description" content="밤늦은 독서를 위한 편안한 디지털 서점. PWA로 제공되는 최고의 독서 경험을 만나보세요." />
+  <meta property="og:image" content="/pwa-512x512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:locale" content="ko_KR" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ebookstore - 디지털 독서실" />
+  <meta name="twitter:description" content="밤늦은 독서를 위한 편안한 디지털 서점" />
+  <meta name="twitter:image" content="/pwa-512x512.png" />
+  
+  <!-- SEO & Performance -->
+  <link rel="canonical" href="https://your-domain.vercel.app/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="googlebot" content="index, follow" />
+  
+  <!-- Preload Critical Resources -->
+  <link rel="preload" href="/styles/globals.css" as="style" />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="dns-prefetch" href="https://images.unsplash.com" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  
+  <!-- Performance Hints -->
+  <meta http-equiv="x-dns-prefetch-control" content="on" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./main.tsx"></script>
+</body>
+</html>
