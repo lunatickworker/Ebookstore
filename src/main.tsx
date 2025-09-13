@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <LibraryProvider>
         <App />
-        <Toaster richColors />
+        <Toaster richColors position="top-right" />
       </LibraryProvider>
     </AuthProvider>
   </React.StrictMode>,

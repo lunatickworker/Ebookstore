@@ -3,7 +3,6 @@ import { Book } from '@/types';
 import { allBooks as initialBooks } from '@/api/mockData';
 import { toast } from "sonner";
 
-
 interface LibraryContextType {
   allBooks: Book[];
   myBooks: Book[];
